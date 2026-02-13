@@ -1,7 +1,7 @@
 // src/types/auth.types.ts
 // Requête de login (ce qu'on envoie au backend)
 export interface LoginRequest {
-  username: string;
+  email: string;
   password: string;
 }
 // Réponse du backend après login réussi
@@ -12,15 +12,15 @@ export interface LoginResponse {
 export interface RegisterRequest {
   nom: string;
   prenom: string;
-  dateDeNaissance: string;
+  dateDeNaissance?: string;  // ← Optionnel si backend ne le demande pas
   email: string;
-  motDePasse: string;
-  role: {
+  password: string;  // ← Changé de 'motDePasse' à 'password'
+  role?: {  // ← Optionnel
     id: number;
-};
+  } | null;
   entreprise?: {
     id: number;
-} | null;
+  } | null;
 }
 // Données décodées du JWT token
 export interface DecodedToken {

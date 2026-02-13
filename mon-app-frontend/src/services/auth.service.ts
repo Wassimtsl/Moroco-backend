@@ -10,9 +10,9 @@ import type {
 import type { Utilisateur } from '../types/user.types';
 
 class AuthService {
-  async login(username: string, password: string): Promise<DecodedToken> {
+  async login(email: string, password: string): Promise<DecodedToken> {
     try {
-      const loginData: LoginRequest = { username, password };
+      const loginData: LoginRequest = { email, password };
 
       const response = await httpClient.post<LoginResponse>(
         API_ENDPOINTS.LOGIN,

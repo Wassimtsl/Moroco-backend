@@ -19,7 +19,7 @@ import java.util.Date;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
 
     private final UserRepository userRepository;
@@ -88,4 +88,5 @@ public class AuthController {
         userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body("Utilisateur créé");
     }
+
 }

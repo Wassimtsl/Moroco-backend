@@ -5,10 +5,10 @@ export const API_BASE_URL =
 // Endpoints de l'API
 export const API_ENDPOINTS = {
   // Authentification
-  LOGIN: '/api/auth/login',
+  LOGIN: '/auth/login',
+  USERS: '/api/users',
 
-  // Utilisateurs
-  USERS: '/api/utilisateur',
+  // Utilisateurs  config.setAllowedOrigins(Collections.singletonList("http://localhost:5173")); // ← Vite, pas 4200
   USER_BY_ID: (id: number) => `/api/utilisateur/${id}`,
 } as const;
 

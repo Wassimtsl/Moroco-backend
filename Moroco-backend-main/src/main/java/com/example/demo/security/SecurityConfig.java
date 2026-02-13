@@ -37,28 +37,33 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(request -> {
                 CorsConfiguration config = new CorsConfiguration();
-                config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+                config.setAllowedOrigins(Collections.singletonList("http://localhost:5173")); 
                 config.setAllowedHeaders(Collections.singletonList("*"));
                 config.setAllowedMethods(Collections.singletonList("*"));
                 config.setExposedHeaders(Collections.singletonList("Authorization"));
+                config.setAllowCredentials(true);
                 return config;
             }))
             .authorizeHttpRequests(auth -> auth
-                //Routes publiques
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/api/public/**").permitAll()
+                // Routes publiques - DOIVENT être avant anyRequest()
+                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                .requestMatchers("/error").permitAll() 
+                .requestMatchers(HttpMethod.GET, "/auth/me").authenticated()
                 
                 .requestMatchers(HttpMethod.GET, "/api/evenements/entre-dates").permitAll()
 
-                //Routes avec rôles
+                // Routes avec rôles
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/guide/**").hasAnyRole("GUIDE", "ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/reservations/**")
                     .hasAnyRole("TOURISTE", "ADMIN")
 
-               
+                // Tout le reste requiert une authentification
                 .anyRequest().authenticated()
             )
+            // Le JWT Filter doit être AVANT UsernamePasswordAuthenticationFilter
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

@@ -2,6 +2,7 @@ package com.example.demo.entities;
 
 import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,9 +24,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nom, prenom, email, numTel, password;
+    private String nom, prenom, numTel, password;
+@Column(unique = true, nullable = false) 
+    private String email; // ✅ Validation email unique   
 
-    private Boolean verifEmail;  // ✅ Validation email
+    private Boolean verifMail;  // ✅ Validation email
 
     // Relations
     @ManyToOne
@@ -97,12 +100,12 @@ public class User {
         this.password = password;
     }
 
-    public Boolean getVerifEmail() {
-        return verifEmail;
+    public Boolean getVerifMail() {
+        return verifMail;
     }
 
-    public void setVerifEmail(Boolean verifEmail) {
-        this.verifEmail = verifEmail;
+    public void setVerifMail(Boolean verifEmail) {
+        this.verifMail = verifEmail;
     }
 
     public Role getRole() {

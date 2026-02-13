@@ -1,6 +1,7 @@
 package com.example.demo.security;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,12 +35,27 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         this.secParams = secParams;
     }
 
-    // 🔓 Le filtre JWT ne s'applique PAS au login
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        return new AntPathRequestMatcher("/api/auth/login", "POST")
-                .matches(request);
-    }
+    // ✅ Exclure les routes publiques du JWT Filter
+// ✅ Exclure les routes publiques du JWT Filter
+@Override
+protected boolean shouldNotFilter(HttpServletRequest request) {
+    String path = request.getRequestURI();
+    String method = request.getMethod();
+    
+    System.out.println("🔍 Vérification route: " + method + " " + path);
+    
+    AntPathRequestMatcher[] publicRoutes = {
+        new AntPathRequestMatcher("/auth/**"),
+        new AntPathRequestMatcher("/api/users", "POST")
+    };
+    
+    boolean skip = Arrays.stream(publicRoutes)
+        .anyMatch(matcher -> matcher.matches(request));
+    
+    System.out.println("✅ shouldNotFilter(" + path + "): " + skip);
+    
+    return skip;
+}
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -78,11 +94,13 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         } catch (TokenExpiredException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("{\"error\":\"Token expired\"}");
+             System.err.println("⚠️ Token expiré - mais route peut être publique");
             return;
 
         } catch (JWTVerificationException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("{\"error\":\"Invalid token\"}");
+                System.err.println("⚠️ Token invalide - mais route peut être publique");
             return;
         }
 

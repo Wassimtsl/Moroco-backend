@@ -22,17 +22,16 @@ public class UserDto {
     @Pattern(regexp = "^\\+?[0-9]{10,14}$", message = "Numéro de téléphone invalide")
     private String numTel;
     
-    @NotBlank(message = "Le mot de passe est obligatoire")
+     @NotBlank(message = "Le mot de passe est obligatoire")
     @Size(min = 8, message = "Le mot de passe doit faire au moins 8 caractères")
     private String password;
     
-    private Boolean verifEmail;
+    private Boolean verifMail;
     
     // ✅ Champs GUIDE intégrés (null si non-guide)
     @Min(value = 0, message = "Le tarif ne peut pas être négatif")
     private Double tarifGuide;
     private Boolean disponibilite;
-    private String Password;
     private RoleDto role;
     private AdresseDto adresse;
     private Set<LangueDto> langues;
@@ -42,11 +41,11 @@ public class UserDto {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Boolean getVerifEmail() {
-		return verifEmail;
+	public Boolean getVerifMail() {
+		return verifMail;
 	}
 	public void setVerifEmail(Boolean verifEmail) {
-		this.verifEmail = verifEmail;
+		this.verifMail = verifEmail;
 	}
 	public Boolean getDisponibilite() {
 		return disponibilite;
@@ -73,10 +72,10 @@ public class UserDto {
 		this.langues = langues;
 	}
 	public String getPassword() {
-		return Password;
+		return password;
 	}
 	public void setPassword(String password) {
-		Password = password;
+		this.password = password;
 	}
 	public String getNom() {
 	 return this.nom ;

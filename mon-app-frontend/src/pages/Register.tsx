@@ -37,7 +37,7 @@ export default function Register() {
         nom,
         prenom,
         email,
-        motDePasse: password,
+        password: password,
         dateDeNaissance,
         role: {
           id: parseInt(roleId, 10),

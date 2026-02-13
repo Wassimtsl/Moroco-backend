@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -29,6 +30,8 @@ public class UserServiceImpl implements UserService {
 	ModelMapper modelMapper;
   @Autowired
   private RoleRepository roleRepo;
+  @Autowired
+  private PasswordEncoder passwordEncoder;
   
   @Autowired
   private AdresseRepository adresseRepo;
@@ -53,9 +56,12 @@ public class UserServiceImpl implements UserService {
 	return userRepo.findAll().stream().map(this::convertEntityToDto).collect(Collectors.toList()) ;
   }
   @Override
-  public UserDto save(UserDto utilisateur) {
-	// TODO Auto-generated method stub
-	return this.convertEntityToDto(userRepo.save( this.convertDtoToEntity(utilisateur)));
+  public UserDto save(UserDto utilisateur) { User user = this.convertDtoToEntity(utilisateur);
+    if (user.getPassword() != null && !user.getPassword().isBlank()) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    }
+    User saved = userRepo.save(user);
+    return this.convertEntityToDto(saved);
   }
   @Override
   public UserDto update(UserDto Utilisateur) {

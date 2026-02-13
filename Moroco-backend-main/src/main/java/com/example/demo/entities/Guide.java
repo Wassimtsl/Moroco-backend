@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -16,6 +17,7 @@ public class Guide {
 	private Double tarif;
 	
 	@OneToMany
+	@JoinColumn(name = "guide_id")
 	private List<Evenement> evenements;
 	
 	public Long getId() {

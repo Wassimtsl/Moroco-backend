@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -75,4 +76,10 @@ public class UserController {
             @RequestParam Double tarif) {
         return ResponseEntity.ok(service.updateTarifGuide(id, tarif));
     }
+    @GetMapping("/auth/me")
+    public ResponseEntity<UserDto> me(Authentication authentication) {
+    String email = authentication.name(); // subject du JWT = email chez toi
+    UserDto user = service.findByEmail(email); // à faire dans ton service
+    return ResponseEntity.ok(user);
+}
 }

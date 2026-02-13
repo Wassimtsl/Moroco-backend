@@ -129,7 +129,7 @@ public class MoroccoBackendApplication {
                         u.setEmail("user" + i + "@test.com");
                         u.setNumTel("0600000" + String.format("%02d", i));
                         u.setPassword(passwordEncoder.encode("password" + i));
-                        u.setVerifEmail(i % 2 == 0);
+                        u.setVerifMail(i % 2 == 0);
 
                         // adresse aléatoire
                         u.setAdresse(adresses.get(random.nextInt(adresses.size())));
