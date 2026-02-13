@@ -50,9 +50,10 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                 .requestMatchers("/error").permitAll() 
-                .requestMatchers(HttpMethod.GET, "/auth/me").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/users/me").authenticated()
                 
-                .requestMatchers(HttpMethod.GET, "/api/evenements/entre-dates").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/evenements").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/evenements/**").permitAll()
 
                 // Routes avec rôles
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")

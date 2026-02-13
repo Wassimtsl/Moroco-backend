@@ -1,15 +1,14 @@
 // src/hooks/useAuth.ts
 import { useState, useEffect, useCallback } from 'react';
 import authService from '../services/auth.service';
-import type { RegisterRequest } from '../types/auth.types';
-
+import type { RegisterRequest, User } from '../types/auth.types';
 interface UseAuthReturn {
   token: string | null;
-  user: { username: string; roles: string[] } | null;
+  user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-  login: (username: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   register: (data: RegisterRequest) => Promise<void>;
   logout: () => void;
   clearError: () => void;
@@ -19,7 +18,7 @@ interface UseAuthReturn {
 export const useAuth = (): UseAuthReturn => {
   // États
   const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<{ username: string; roles: string[] } | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -56,18 +55,19 @@ export const useAuth = (): UseAuthReturn => {
   /**
    * FONCTION 1 : LOGIN
    */
-  const login = useCallback(async (username: string, password: string) => {
+  const login = useCallback(async (email: string, password: string) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const decoded = await authService.login(username, password);
+      const decoded = await authService.login(email, password);
 
       const newToken = authService.getToken();
       setToken(newToken);
 
       setUser({
-        username: decoded.sub,
+        email: decoded.sub,
+        sub: decoded.sub,
         roles: decoded.roles ?? [],
       });
     } catch (e: unknown) {
@@ -90,8 +90,7 @@ export const useAuth = (): UseAuthReturn => {
       try {
         await authService.register(data);
 
-        // ⚠️ adapte ces champs si RegisterRequest n'a pas nom/motDePasse
-        await login((data as any).nom, (data as any).motDePasse);
+        await login(data.email, data.password);
       } catch (e: unknown) {
         const message = e instanceof Error ? e.message : "Erreur d'inscription";
         setError(message);

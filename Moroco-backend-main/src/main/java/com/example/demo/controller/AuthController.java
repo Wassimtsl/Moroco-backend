@@ -7,6 +7,7 @@ import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.UserDto;
 import com.example.demo.entities.Role;
 import com.example.demo.entities.User;
+import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.security.SecParams;
 import org.springframework.http.HttpStatus;
@@ -23,14 +24,17 @@ import java.util.Date;
 public class AuthController {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final SecParams secParams;
     private final PasswordEncoder passwordEncoder;
 
     // ✅ Injection par constructeur
     public AuthController(UserRepository userRepository,
+                          RoleRepository roleRepository,
                           SecParams secParams,
                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.secParams = secParams;
         this.passwordEncoder = passwordEncoder;
     }
@@ -83,7 +87,11 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setNom(userDto.getNom());
         user.setPrenom(userDto.getPrenom());
-        // ... autres champs
+
+        // Rôle TOURISTE par défaut (id=3)
+        Role touristeRole = roleRepository.findById(3L)
+                .orElseThrow(() -> new RuntimeException("Rôle TOURISTE introuvable"));
+        user.setRole(touristeRole);
 
         userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body("Utilisateur créé");

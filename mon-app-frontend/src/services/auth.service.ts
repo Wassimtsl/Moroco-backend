@@ -6,6 +6,7 @@ import type {
   LoginResponse,
   RegisterRequest,
   DecodedToken,
+  User,
 } from '../types/auth.types';
 import type { Utilisateur } from '../types/user.types';
 
@@ -35,7 +36,7 @@ class AuthService {
   async register(data: RegisterRequest): Promise<Utilisateur> {
     try {
       const response = await httpClient.post<Utilisateur>(
-        API_ENDPOINTS.USERS,
+        API_ENDPOINTS.REGISTER,
         data
       );
       return response.data;
@@ -85,15 +86,16 @@ class AuthService {
   }
 
   private setUser(decoded: DecodedToken): void {
-    const user = {
-      username: decoded.sub,
+    const user: User = {
+      email: decoded.sub,
+      sub: decoded.sub,
       roles: decoded.roles,
     };
 
     localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
   }
 
-  getUser(): { username: string; roles: string[] } | null {
+  getUser(): User | null {
     const userStr = localStorage.getItem(STORAGE_KEYS.USER);
     if (!userStr) return null;
 

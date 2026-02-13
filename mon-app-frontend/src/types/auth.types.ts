@@ -12,19 +12,21 @@ export interface LoginResponse {
 export interface RegisterRequest {
   nom: string;
   prenom: string;
-  dateDeNaissance?: string;  // ← Optionnel si backend ne le demande pas
   email: string;
-  password: string;  // ← Changé de 'motDePasse' à 'password'
-  role?: {  // ← Optionnel
-    id: number;
-  } | null;
-  entreprise?: {
-    id: number;
-  } | null;
+  password: string;
+  numTel?: string;
 }
 // Données décodées du JWT token
 export interface DecodedToken {
   sub: string;
   roles: string[];
   exp: number;
+}
+
+// Utilisateur stocké côté client (exposé par useAuth)
+export interface User {
+  
+  email: string;
+  sub: string;
+  roles: string[];
 }

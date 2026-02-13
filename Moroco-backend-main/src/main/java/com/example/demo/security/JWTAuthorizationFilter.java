@@ -83,7 +83,7 @@ protected boolean shouldNotFilter(HttpServletRequest request) {
             List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
 
             Collection<GrantedAuthority> authorities = roles.stream()
-                    .map(SimpleGrantedAuthority::new)
+                    .map(r -> new SimpleGrantedAuthority("ROLE_" + r))
                     .collect(Collectors.toList());
 
             UsernamePasswordAuthenticationToken authentication =

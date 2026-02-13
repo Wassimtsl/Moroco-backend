@@ -17,9 +17,9 @@ import com.example.demo.entities.*;
 import com.example.demo.repository.*;
 
 @SpringBootApplication
-@ComponentScan(basePackages = { "com.example.demo", "com.morocco" })
-@EntityScan(basePackages = { "com.example.demo.entities", "com.morocco.entities" })
-@EnableJpaRepositories(basePackages = { "com.example.demo.repository", "com.morocco.repository" })
+@ComponentScan(basePackages = { "com.example.demo" })
+@EntityScan(basePackages = { "com.example.demo.entities" })
+@EnableJpaRepositories(basePackages = { "com.example.demo.repository" })
 public class MoroccoBackendApplication {
 
     public static void main(String[] args) {

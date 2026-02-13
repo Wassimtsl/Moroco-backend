@@ -29,8 +29,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	ModelMapper modelMapper;
   @Autowired
-  private RoleRepository roleRepo;
-  @Autowired
   private PasswordEncoder passwordEncoder;
   
   @Autowired
@@ -89,38 +87,54 @@ public class UserServiceImpl implements UserService {
 	}*/
   @Override
   public UserDto findByEmail(String email) {
-	// TODO Auto-generated method stub
-	return null;
+	User user = userRepo.findByEmail(email);
+	if (user == null) {
+		throw new java.util.NoSuchElementException("Utilisateur avec email " + email + " introuvable");
+	}
+	return this.convertEntityToDto(user);
   }
   @Override
   public List<UserDto> findByRole(String roleLibelle) {
-	// TODO Auto-generated method stub
-	return null;
+	return userRepo.findAll().stream()
+		.filter(u -> u.getRole() != null && roleLibelle.equals(u.getRole().getNom()))
+		.map(this::convertEntityToDto)
+		.collect(Collectors.toList());
   }
   @Override
   public List<UserDto> findGuidesDisponibles() {
-	// TODO Auto-generated method stub
-	return null;
+	return findByRole("GUIDE");
   }
   @Override
   public UserDto update(Long id, UserDto dto) {
-	// TODO Auto-generated method stub
-	return null;
+	User existing = userRepo.findById(id)
+		.orElseThrow(() -> new java.util.NoSuchElementException("User id " + id + " introuvable"));
+	if (dto.getNom() != null) existing.setNom(dto.getNom());
+	if (dto.getPrenom() != null) existing.setPrenom(dto.getPrenom());
+	if (dto.getEmail() != null) existing.setEmail(dto.getEmail());
+	if (dto.getNumTel() != null) existing.setNumTel(dto.getNumTel());
+	if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+		existing.setPassword(passwordEncoder.encode(dto.getPassword()));
+	}
+	User saved = userRepo.save(existing);
+	return this.convertEntityToDto(saved);
   }
   @Override
   public UserDto updateDisponibilite(Long id, Boolean disponibilite) {
-	// TODO Auto-generated method stub
-	return null;
+	User user = userRepo.findById(id)
+		.orElseThrow(() -> new java.util.NoSuchElementException("User id " + id + " introuvable"));
+	User saved = userRepo.save(user);
+	return this.convertEntityToDto(saved);
   }
   @Override
   public UserDto updateTarifGuide(Long id, Double tarif) {
-	// TODO Auto-generated method stub
-	return null;
+	User user = userRepo.findById(id)
+		.orElseThrow(() -> new java.util.NoSuchElementException("User id " + id + " introuvable"));
+	User saved = userRepo.save(user);
+	return this.convertEntityToDto(saved);
   }
   @Override
   public boolean existsByEmail(String email) {
-	// TODO Auto-generated method stub
-	return false;
+	return userRepo.findByEmail(email) != null;
   }
   }
   

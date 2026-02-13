@@ -29,6 +29,31 @@ public class ReservationDto {
     private String statutLibelle;
     private String statutCode;
     private String nomTouriste;
+
+	public Long getEventId() {
+		return eventId;
+	}
+	public void setEventId(Long eventId) {
+		this.eventId = eventId;
+	}
+	public Long getUserId() {
+		return userId;
+	}
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+	public Long getStatutId() {
+		return statutId;
+	}
+	public void setStatutId(Long statutId) {
+		this.statutId = statutId;
+	}
+	public Integer getNombrePersonne() {
+		return nombrePersonne;
+	}
+	public void setNombrePersonne(Integer nombrePersonne) {
+		this.nombrePersonne = nombrePersonne;
+	}
 	public Long getId() {
 		return id;
 	}
